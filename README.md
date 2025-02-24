@@ -38,19 +38,18 @@ First, I transposed fang_et_al_genotypes.txt so that I could join it to snp_posi
 ```bash
 $ awk -f transpose.awk fang_et_al_genotypes.txt > transposed_genotypes.txt
 ```
-fang_et_al_genotypes.txt had 2 rows more than snp_position.txt, which would make the joining of the columns problematic. Thus, I inserted 2 empty rows in the snp_position.txt file to match the sample IDs in both files.
+fang_et_al_genotypes.txt had 2 rows more than snp_position.txt, which would make the joining of the columns problematic. Thus, I inserted 2 empty rows in the snp_position.txt file to match the sample IDs in both files, and called the modified file snp_position_mod.txt.
 ```bash
 $ awk 'NR == 1 {print; print ""; print ""; next} {print}' snp_position.txt > snp_position_mod.txt
 ```
 ###    Maize Data
 In this code, I scanned the 3rd row of transposed_genotypes.txt and only put the columns in a new maize.txt file that contained the values "ZMMIL", "ZMMLR", or "ZMMMR". That way, the maize.txt file only has the maize chromosome information that we're interested in.
 ```bash
-# Define the input and output files
 input_file="transposed_genotypes.txt"
 output_file="maize.txt"
 # Use awk to process the file
 awk '
-BEGIN { FS=OFS="\t" }  # Set the field separator to tab (adjust if needed)
+BEGIN { FS=OFS="\t" }  # Set the field separator to tab
 NR == 3 {              # Process only the 3rd row
     for (i = 1; i <= NF; i++) {  # Loop through all columns
         if ($i == "ZMMLR" || $i == "ZMMIL" || $i == "ZMMMR") {  # Check for the desired values
